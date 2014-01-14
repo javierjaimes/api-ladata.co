@@ -1,0 +1,21 @@
+{
+  "name": "api.ladata.co",
+  "version": "0.0.1",
+  "description": "The api for ladata.co",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "@senorpasajero",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "express": "~3.4.6",
+    "passport": "~0.1.17",
+    "oauth2orize": "~1.0.0",
+    "hat": "0.0.3",
+    "cradle": "~0.6.6",
+    "passport-oauth2-client-password": "~0.1.1",
+    "passport-http": "~0.2.2",
+    "passport-http-bearer": "~1.0.1"
+  }
+}
