@@ -1,4 +1,5 @@
 var express = require( 'express' ),
+    url = require('url'),
     cradle = require('cradle'),
     passport = require( 'passport' ),
     BasicStrategy = require('passport-http').BasicStrategy,
@@ -12,7 +13,25 @@ var express = require( 'express' ),
 /*****
  * Database Connection
  */
-var db = new(cradle.Connection)().database('ladata-co');
+if( process.env.CLOUDANT_URL ){
+  console.log( 'CONNECT CLOUDANT' );
+
+  var cloudant_url = url.parse( process.env.CLOUDANT_URL);
+  var cloudant_auth = cloudant_url.auth.split( ':' );
+  console.log( cloudant_auth );
+  cradle.setup({
+    'host': cloudant_url.hostname,
+    'auth': {
+      'username': cloudant_auth[0],
+      'password': cloudant_auth[1]
+    },
+    'cache': true,
+    'raw': false 
+  })
+  var db = new(cradle.Connection)().database('ladata-co');
+}else{
+  var db = new(cradle.Connection)().database( 'ladata-co' );
+}
 db.exists(function (err, exists) {
   if (err) {
     console.log('error', err);
@@ -212,7 +231,7 @@ app.get( '/datasets/:id/next/:docid', passport.authenticate( 'bearer', {session:
   console.log( 'next_startkey' );
   console.log( next_startkey );
 
-  db.view( 'columns/byList', { 'key':req.params.id, 'startkey_docid':  next_startkey_docid, 'limit': limit + 1 }, function( err, docs ){
+  db.view( 'data/byDataset', { 'key':req.params.id, 'startkey_docid':  next_startkey_docid, 'limit': limit + 1 }, function( err, docs ){
     console.log( err );
     console.log( docs );
     total_rows = docs.total_rows;
@@ -239,6 +258,7 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
     console.log(  dataset.fields );
 
     db.view( 'data/byDataset', { 'key':req.params.id, 'limit': limit + 1 }, function( err, docs ){
+      console.log( docs );
       total_rows = docs.total_rows;
       offset = docs.offset;
       
@@ -250,7 +270,8 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
 
       lists = [];
       for( var i =0; i < limit; i++ ){
-        if( i < total_rows ){
+        console.log( i, limit, total_rows );
+        if( i < total_rows - 1 ){
           list = {};
           list.id = docs[i].id;
 
@@ -278,4 +299,4 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
  
 } )
 
-app.listen(3002);
+app.listen( process.env.PORT || 3002);
