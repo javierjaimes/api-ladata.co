@@ -106,9 +106,7 @@ passport.use(new BearerStrategy(
     console.log( 'Passpor Bearer Strategy' );
     db.view( 'tokens/all', { key: accessToken }, function( err, res ){
       console.log( 'Find TOken' );
-      console.log( res );
-      console.log( typeof res );
-      console.log( res.length );
+      if( err ){ console.log( err ); }
 
       if (err) { return done(err); }
       if ( res.length <= 0) { return done(null, false); }
