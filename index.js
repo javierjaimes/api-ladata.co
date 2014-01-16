@@ -280,7 +280,7 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
             fields[field_name] = field_value;
           }
 
-          list.values = fields;
+          list.fields = fields;
 
           list.created = docs[i].value.created_at;
           lists.push( list );
