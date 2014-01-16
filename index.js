@@ -253,7 +253,6 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
   dataset_id = req.params.id;
   db.get( dataset_id, function( err, doc ){
     dataset = doc;
-    console.log(  dataset.fields );
 
     db.view( 'data/byDataset', { 'key':req.params.id, 'limit': limit + 1, 'reduce': false }, function( err, docs ){
       console.log( docs );
@@ -268,21 +267,18 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
 
       lists = [];
       for( var i =0; i < limit; i++ ){
-        console.log( i, limit, total_rows );
         if( i < total_rows - 1 ){
           list = {};
           list.id = docs[i].id;
 
           fields = {};
           for( var j in docs[i].value.fields ){
-            console.log(j);
             var field_name = dataset.fields[j].name;
             var field_value = docs[i].value.fields[j];
 
 
             fields[field_name] = field_value;
           }
-          console.log( fields );
 
           list.values = fields;
 
