@@ -255,7 +255,7 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
     dataset = doc;
     console.log(  dataset.fields );
 
-    db.view( 'data/byDataset', { 'key':req.params.id, 'limit': limit + 1 }, function( err, docs ){
+    db.view( 'data/byDataset', { 'key':req.params.id, 'limit': limit + 1, 'reduce': false }, function( err, docs ){
       console.log( docs );
       total_rows = docs.total_rows;
       offset = docs.offset;
@@ -290,7 +290,7 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
           lists.push( list );
         }
       }
-      res.json({ 'next': next_startkey, 'rows': lists });
+      res.json({ 'next': next_startkey, 'data': lists });
     } )
  
   })
