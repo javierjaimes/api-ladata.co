@@ -267,7 +267,7 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
 
       lists = [];
       for( var i =0; i < limit; i++ ){
-        if( i < total_rows - 1 ){
+        if( i < total_rows ){
           list = {};
           list.id = docs[i].id;
 
