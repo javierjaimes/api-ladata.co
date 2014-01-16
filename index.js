@@ -191,7 +191,7 @@ app.get( '/datasets(?:\/next\/:docid)?',  passport.authenticate('bearer', { sess
   next_startkey_docid = ( next_startkey != false )? next_startkey:0;
   //skip = ( req.params.page != undefined )? ( +req.params.page - 1 ) * limit: 0;
 
-  db.view( 'datasets/all', { startkey: next_startkey, startkey_docid:  next_startkey_docid, limit: limit + 1 }, function( err, docs ){
+  db.view( 'datasets/all', { startkey: next_startkey, startkey_docid:  next_startkey_docid, limit: limit + 1, reduce: false }, function( err, docs ){
     console.log( err );
     console.log( docs );
     console.log( docs.total_rows );
@@ -218,7 +218,7 @@ app.get( '/datasets(?:\/next\/:docid)?',  passport.authenticate('bearer', { sess
         lists.push( list );
       }
     }
-    res.json({ 'next': next_startkey, 'lists': lists });
+    res.json({ 'next': next_startkey, 'datasets': lists });
   } )
 } )
 app.get( '/datasets/:id/next/:docid', passport.authenticate( 'bearer', {session: false} ) , function( req, res ){
