@@ -255,9 +255,15 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
     dataset = doc;
 
     db.view( 'data/byDataset', { 'key':req.params.id, 'limit': limit + 1, 'reduce': false }, function( err, docs ){
-      console.log( docs );
-      total_rows = docs.total_rows;
+      console.log( 'DATA', docs );
+      console.log( 'DATOS', docs.length );
+
+      //total_rows = docs.total_rows;
+      total_rows = docs.length;
       offset = docs.offset;
+
+      console.log( 'TOTAL ROWS', total_rows );
+      console.log( 'OFFSET', offset );
       
       if( total_rows > limit ){
         next_startkey = ( (offset * limit) ==  total_rows )? false:docs[ limit ].id;
@@ -266,7 +272,7 @@ app.get( '/datasets/:id/', passport.authenticate( 'bearer', { session: false }),
       }
 
       lists = [];
-      for( var i =0; i < limit; i++ ){
+      for( var i =0; i < limit - 1; i++ ){
         if( i < total_rows ){
           list = {};
           list.id = docs[i].id;
